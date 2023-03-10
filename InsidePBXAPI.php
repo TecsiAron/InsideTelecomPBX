@@ -143,13 +143,13 @@ class InsidePBXAPI
                     && in_array($callMetadata->forward_name,$queNames) 
                     &&  strtolower($callMetadata->call_direction)==CallConstants::DIRECTION_INBOUND)
                     {
-                        $callInfo = $this->ConvertCallLogMetadataToCallInfo($callMetadata);
+                        $callInfo = $this->ConvertAbandonedCallMetadataToCallInfo($callMetadata);
                         $abandonedCalls[$callMetadata->forward_name][]=$callInfo;
                         $callMap[$callInfo->CallerNumber][]=[$callInfo->CallAnswerTime, $callMetadata->forward_name,  sizeof($abandonedCalls[$callMetadata->forward_name])-1];
                     }
                     else if(in_array($callMetadata->forward,$extensions))
                     {
-                        $callInfo = $this->ConvertCallLogMetadataToCallInfo($callMetadata);
+                        $callInfo = $this->ConvertAbandonedCallMetadataToCallInfo($callMetadata);
                         if(!empty($callMap[$callInfo->CallerNumber]))
                         {
                             for($j=0; $j<sizeof($callMap); $j++)
@@ -178,7 +178,7 @@ class InsidePBXAPI
         return $abandonedCalls;
     }
 
-    private function ConvertCallLogMetadataToCallInfo($callMetadata):CallInfo
+    private function ConvertAbandonedCallMetadataToCallInfo($callMetadata):CallInfo
     {
         $callInfo = new CallInfo();
         $callInfo->UUID=$callMetadata->unique_token;
